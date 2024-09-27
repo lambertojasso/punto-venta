@@ -10,11 +10,13 @@ import {
 
 const router = Router();
 
-router.get("/producto/:id_producto", productoId);
-router.get("/producto/desc/:desc_producto", productoDesc);
+//    /productos
 
-router.post("/producto", insertarProducto);
-router.put("/producto", actualizarProducto);
-router.delete("/producto/:id_producto", eliminarProducto);
+router.get("/:id_producto", productoId);
+router.get("/desc/:desc_producto", productoDesc);
+
+router.post("/", insertarProducto);
+router.put("/", actualizarProducto);
+router.delete("/:id_producto", eliminarProducto);
 
 export default router;
