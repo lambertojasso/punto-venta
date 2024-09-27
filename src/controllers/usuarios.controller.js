@@ -2,6 +2,26 @@
 
 import { pool } from "../db.js";
 
+export const consultarUsuario = async (req, res) => {
+  try {
+    const { id_usuario } = req.params;
+
+    // Lista de inventario
+    const [usuario] = await pool.query(
+      `select u.idusuarios, u.usuario, u.tipo from usuarios u where u.idusuarios = ?`,
+      [id_usuario]
+    );
+
+    if (usuario.length === 0)
+      return res.status(404).json({ msj: "No existen registro!" });
+
+    res.json(usuario[0]);
+
+  } catch (error) {
+    res.status(500).json({ msj: "Error servidor !!", ...error });
+  }
+};
+
 export const listaUsuarios = async (req, res) => {
   try {
     // Lista de inventario

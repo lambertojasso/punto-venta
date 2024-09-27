@@ -21,8 +21,8 @@ const port = 3000;
 // Router de la api
 app.use("/api", cajaRouter);
 app.use("/api/producto", productoRouter);
-app.use("/api", inventarioRouter);
-app.use("/api", usuariosRouter);
+app.use("/api/inventario", inventarioRouter);
+app.use("/api/usuarios", usuariosRouter);
 app.use("/api/ventas", ventasRouter);
 
 app.get("/", (req, res) => {

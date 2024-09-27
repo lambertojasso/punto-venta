@@ -59,3 +59,31 @@ export const actualizarInventario = async (req, res) => {
     res.status(500).json({ ...error });
   }
 };
+
+// Actualiza inventario compre, venta
+export const movimientosInventario = async (lista = []) => {
+
+  try {
+    let q1 = "UPDATE inventario SET cantidad = CASE idProducto ",
+      q2 = " END WHERE idProducto IN (";
+
+    lista.forEach((el) => {
+      q1 += `WHEN ${el.id} THEN cantidad + ${el.cantidad} `;
+      q2 += `${el.id},`;
+    });
+
+    // elimina la ultima coma
+    q2 = q2.substring(0, q2.length - 1);
+
+    q1 = q1 + q2 + ")";
+
+    const [actualizaInve] = await pool.query(q1);
+
+    /* Retorna si existe un error */
+    if (actualizaInve.affectedRows != lista.length) return false;
+
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+};

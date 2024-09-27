@@ -6,6 +6,10 @@ inner join productos p on inv.idProducto = p.idproductos
 
 limit 10;
 
+select p.idproductos, p.codigo, p.descripcion, pr.costo, pr.precioVenta from productos p 
+inner join precios pr on pr.idProducto = p.idproductos
+where p.idproductos = 2;
+
 
 select * from productos p where p.descripcion like '%choc%';
 
@@ -174,6 +178,50 @@ inner join ticketVenta t on t.idticketVenta = v.idTicket
 where v.idProducto = 2 and date(t.fecha) between '2024-01-01' and '2024-12-31'
 group by week(t.fecha,1), v.precioVenta;
 
+desc ticketVenta ;
+
+-- 'idticketVenta', 'int', 'NO', 'PRI', NULL, 'auto_increment'
+-- 'fecha', 'datetime', 'NO', '', NULL, ''
+-- 'totalArticulos', 'int', 'NO', '', '0', ''
+-- 'pago', 'float', 'NO', '', '0', ''
+-- 'idUsuario', 'int', 'NO', 'MUL', NULL, ''
+select now();
+insert into ticketVenta (idticketVenta,fecha,totalArticulos,pago,idUsuario) 
+values (0,now(),0,0,1);
+
+-- registyrar venta
+
+desc ventas;
+
+# Field, Type, Null, Key, Default, Extra
+-- idventas, int, NO, PRI, , auto_increment
+-- idTicket, int, NO, MUL, , 
+-- idProducto, int, NO, MUL, , 
+-- cantidad, float, YES, , , 
+-- costo, float, YES, , , 
+-- precioVenta, float, YES, , , 
+
+insert into ventas (idventas, idTicket, idProducto, cantidad , costo, precioVenta) 
+values (idventas, idTicket, idProducto, cantidad , costo, precioVenta); 
+
+update inventario i set i.cantidad = i.cantidad + (-1) where i.idProducto = 1;
+
+;
+
+select * from inventario limit 1;
+
+desc inventario;
+
+
+UPDATE inventario SET cantidad = CASE idProducto 
+                          WHEN 1 THEN 1 
+                          WHEN 2 THEN 2 
+                          WHEN 4 THEN 10 
+                          ELSE Col1 
+                        END
+             WHERE id IN (1, 2, 3, 4);
+             
+             
 
 
 

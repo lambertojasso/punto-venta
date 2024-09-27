@@ -1,4 +1,5 @@
 import { pool } from "../db.js";
+import { movimientosInventario } from "./inventario.controller.js";
 
 //  Funcion para obtener ventas de un periodo
 export const consultarVentasPerido = async (req, res) => {
@@ -105,14 +106,12 @@ where v.idTicket = ?`,
       [id_ticket]
     );
 
-
     const totalTicket = listaProd.reduce(
       (accumulator, elemento) => accumulator + elemento.subtotal,
       0
     );
 
-
-    res.json({ infoTicket: {...infoTicket[0], totalTicket}, listaProd });
+    res.json({ infoTicket: { ...infoTicket[0], totalTicket }, listaProd });
   } catch (error) {
     res.status(500).json({ ...error });
   }
@@ -121,7 +120,7 @@ where v.idTicket = ?`,
 //  Funcion para ingresar una nueva venta
 export const registrarVenta = async (req, res) => {
   try {
-    const { pago, idUsuario, lista } = req.body;
+    const { pago = 0, idUsuario = 1, lista = [] } = req.body;
 
     // Cuenta el numero de articulos
 
@@ -162,15 +161,69 @@ values ${q}`
     if (ventaInsert.affectedRows != lista.length)
       return res.status(404).json({ msj: "Error de registrar venta" });
 
+    const inventario = lista.map((el) => {
+      return {
+        id: el.idproductos,
+        cantidad: el.cantidad * -1,
+      };
+    });
+
+    const aInve = await movimientosInventario(inventario);
+
+    if (!aInve)
+      return res.status(404).json({ msj: "Error al actualizar inventario" });
+
     res.json({ msj: `Venta registrada con el ticket ${nticket}` });
   } catch (error) {
-    res.status(500), json({ ...error });
+    res.status(500).json({ ...error });
   }
 };
 
 // Funcion para eliminar una venta
-export const eliminarVenta = (req, res) => {
+export const eliminarVenta = async (req, res) => {
   const { id_venta } = req.params;
 
-  res.json({ msj: `registrar ventas ${id_venta}` });
+  try {
+    // Lista de productos del ticket
+    const [prodcutosTicket] = await pool.query(
+      `select v.idProducto, v.cantidad from ventas v where v.idTicket = ? order by v.idProducto asc`,
+      [id_venta]
+    );
+
+    // Actualiza el inventario
+    const inventario = prodcutosTicket.map((el) => {
+      return {
+        id: el.idProducto,
+        cantidad: el.cantidad,
+      };
+    });
+
+    const aInve = await movimientosInventario(inventario);
+
+    if (!aInve)
+      // Verifica si se actualizo el inventario
+      return res.status(404).json({ msj: "Error al actualizar inventario" });
+
+    // Elimina los productos del ticket
+    const [eliminaProd] = await pool.query(
+      `delete from ventas v where v.idTicket = ?`,
+      [id_venta]
+    );
+
+    if (eliminaProd.affectedRows != prodcutosTicket.length)
+      return res.status(404).json({ msj: "Error al eliminar producto venta" });
+
+    // Elimina el ticket de la venta
+    const [eliminaTicket] = await pool.query(
+      `delete from ticketVenta t where t.idticketVenta = ?`,
+      [id_venta]
+    );
+
+    if (eliminaTicket.affectedRows != 1)
+      return res.status(404).json({ msj: "Error al eliminar ticket venta" });
+
+    res.json({ msj: `Venta eliminada !!!` });
+  } catch (error) {
+    res.status(500).json({ ...error });
+  }
 };

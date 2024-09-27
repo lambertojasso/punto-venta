@@ -7,9 +7,9 @@ import {
 
 const router = Router();
 
-router.get("/inventario", consultaInvetario);
-router.get("/inventario/:id_producto", consultaInvetarioProducto);
+router.get("/", consultaInvetario);
+router.get("/:id_producto", consultaInvetarioProducto);
 
-router.put("/inventario", actualizarInventario);
+router.put("/", actualizarInventario);
 
 export default router;

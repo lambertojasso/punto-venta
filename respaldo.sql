@@ -9,4 +9,4 @@ CREATE DATABASE puntoVenta;
 use puntoVenta;
 
 -- llena los datos de la base de datos local
-SOURCE /home/gustavo/punto-venta/baseFinal.sql
+SOURCE /home/gustavo/punto-venta/base2.sql
