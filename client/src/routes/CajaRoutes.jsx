@@ -2,14 +2,28 @@ import { Routes, Route } from "react-router-dom";
 import CajaRegistradora from "../pages/CajaRegistradora";
 import ConsultarVenta from "../pages/ConsultarVenta";
 import Inventario from "../pages/Inventario";
+import Usuarios from "../pages/Usuarios";
+import { TiendaProvider } from "../context/TiendaContext";
+import BuscarProducto from "../pages/BuscarProducto";
+import ConsultaTicket from "../pages/ConsultaTicket";
 
 const CajaRoutes = () => {
   return (
-    <Routes>
-      <Route path="/punto-venta" element={<CajaRegistradora />} />
-      <Route path="/consultar-venta" element={<ConsultarVenta />} />
-      <Route path="/inventario" element={<Inventario />} />
-    </Routes>
+    <TiendaProvider>
+      <Routes>
+        <Route path="/punto-venta" element={<CajaRegistradora />} />
+        <Route path="/buscar-producto" element={<BuscarProducto />} />
+
+        <Route path="/consultar-venta" element={<ConsultarVenta />} />
+        <Route
+          path="/consultar-ticket/:id_ticket"
+          element={<ConsultaTicket />}
+        />
+
+        <Route path="/inventario" element={<Inventario />} />
+        <Route path="/usuarios" element={<Usuarios />} />
+      </Routes>
+    </TiendaProvider>
   );
 };
 

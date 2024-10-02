@@ -11,7 +11,12 @@ import ventasRouter from "./routes/ventas.routes.js";
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  credentials: true,
+  origin: ["http://localhost:5173"], // Whitelist the domains you want to allow
+};
+
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
 

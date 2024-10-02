@@ -54,6 +54,17 @@ const NavBar = () => {
                 Inventario
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+                aria-current="page"
+                to={"/caja/usuarios"}
+              >
+                Usuarios
+              </NavLink>
+            </li>
           </ul>
         </div>
         <div className="d-flex">

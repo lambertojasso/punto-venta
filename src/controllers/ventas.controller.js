@@ -5,11 +5,11 @@ import { movimientosInventario } from "./inventario.controller.js";
 export const consultarVentasPerido = async (req, res) => {
   const { fecha_inicio, fecha_final } = req.params;
 
-  console.log(fecha_inicio, fecha_final);
   try {
     // Lista de ventas
-    const [listaVentas] = await pool.query(
-      `select t.idticketVenta, t.pago, sum(v.cantidad * v.precioVenta) as 'total', t.pago - sum(v.cantidad * v.precioVenta) as 'cambio'
+    const [lista] = await pool.query(
+      `select t.idticketVenta, t.pago, sum(v.cantidad * v.precioVenta) as 'total', t.pago - sum(v.cantidad * v.precioVenta) as 'cambio', 
+      time(t.fecha) as 'hora', date_format(t.fecha, "%Y-%m-%d") as 'fecha'  
 from ticketVenta t 
 inner join ventas v on t.idticketVenta = v.idTicket
 where date(t.fecha) between ? and ? 
@@ -18,20 +18,19 @@ order by date(fecha) asc`,
       [fecha_inicio, fecha_final]
     );
 
-    if (listaVentas.length === 0)
+    if (lista.length === 0)
       return res.status(404).json({ msj: `No existen registros` });
 
-    const [total] = await pool.query(
-      `select sum(v.cantidad * v.precioVenta) as 'total'
-from ticketVenta t 
-inner join ventas v on t.idticketVenta = v.idTicket
-where date(t.fecha) between ? and ?`,
-      [fecha_inicio, fecha_final]
+    //  Aplicar un reduce al arreglo de la lsiayt de ventas
+
+    const total = lista.reduce(
+      (accumulator, elemento) => accumulator + elemento.total,
+      0
     );
 
     res.json({
-      total: total[0].total,
-      listaVentas,
+      total,
+      lista,
     });
   } catch (error) {
     res.status(500).json({ ...error });
@@ -88,7 +87,7 @@ export const consultarTicket = async (req, res) => {
   try {
     // informacion del ticket
     const [infoTicket] = await pool.query(
-      `select date_format(t.fecha, "%Y-%m-%d") as 'fecha',time(t.fecha) as 'hora', t.pago, u.usuario, t.totalArticulos 
+      `select t.idticketVenta, date_format(t.fecha, "%Y-%m-%d") as 'fecha',time(t.fecha) as 'hora', t.pago, u.usuario, t.totalArticulos 
       from ticketVenta t 
 inner join usuarios u on u.idusuarios = t.idUsuario
 where t.idticketVenta = ?`,

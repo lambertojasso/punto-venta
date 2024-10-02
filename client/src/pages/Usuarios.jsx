@@ -1,6 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import axiosPunto from '../api/axios';
 
 const Usuarios = () => {
+
+
+
+    
   return (
 
 <div className="container">
