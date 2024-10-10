@@ -80,6 +80,43 @@ group by week(t.fecha,1), v.precioVenta`,
   }
 };
 
+// Consultar corte de dia
+
+export const consultarCorteDia = async (req, res) => {
+  const { fecha_inicio, fecha_final } = req.params;
+
+  try {
+    // Lista de ventas
+    const [lista] = await pool.query(
+      ` select p.idproductos, p.descripcion, sum(v.cantidad) as 'cantidad', 
+ v.precioVenta, sum(v.cantidad * v.precioVenta) as 'subtotal'  
+ from ventas v 
+ inner join productos p on v.idProducto = p.idproductos 
+ where v.idTicket in ( select t.idticketVenta from ticketVenta t where date(t.fecha) between ? and ?)
+ group by p.idproductos, v.precioVenta
+ order by cantidad desc`,
+      [fecha_inicio, fecha_final]
+    );
+
+    if (lista.length === 0)
+      return res.status(404).json({ msj: `No existen registros` });
+
+    //  Aplicar un reduce al arreglo de la lsiayt de ventas
+
+    const total = lista.reduce(
+      (accumulator, elemento) => accumulator + elemento.subtotal,
+      0
+    );
+
+    res.json({
+      total,
+      lista,
+    });
+  } catch (error) {
+    res.status(500).json({ ...error });
+  }
+};
+
 // Funcion para consultar ticket de venta #
 export const consultarTicket = async (req, res) => {
   const { id_ticket } = req.params;

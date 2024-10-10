@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  consultarCorteDia,
   consultarTicket,
   consultarVentasPerido,
   consultarVentasProducto,
@@ -10,6 +11,7 @@ import {
 const router = Router();
 
 router.get("/:id_ticket", consultarTicket);
+router.get("/corte/:fecha_inicio/:fecha_final", consultarCorteDia);
 router.get("/:fecha_inicio/:fecha_final", consultarVentasPerido);
 router.get("/:fecha_inicio/:fecha_final/:idProducto", consultarVentasProducto);
 

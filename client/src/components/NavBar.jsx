@@ -38,6 +38,17 @@ const NavBar = () => {
                   isActive ? "nav-link active" : "nav-link"
                 }
                 aria-current="page"
+                to={"/caja/corte-dia"}
+              >
+                Corte del dia
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? "nav-link active" : "nav-link"
+                }
+                aria-current="page"
                 to={"/caja/consultar-venta"}
               >
                 Consultar Ventas

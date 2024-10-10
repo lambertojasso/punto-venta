@@ -1,11 +1,10 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useTienda } from "../context/TiendaContext";
 
-export const FormFechas = () => {
+export const FormFechas = ({fechas, setFechas}) => {
 
 
-   const {fechas, setFechas} = useTienda();
+  //  const {fechas, setFechas} = useTienda();
    
   const { register, handleSubmit } = useForm({
     defaultValues: {

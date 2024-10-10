@@ -1,17 +1,4 @@
-import { useTienda } from "../context/TiendaContext";
-
-const TablaPRoductosVentas = () => {
-  const {
-    ticketVenta: { listaProd },
-  } = useTienda();
-
-  //   {
-  //     "descripcion": "CERVEZA BOTELLA SCHNEIDER X 1 UN",
-  //     "cantidad": 2,
-  //     "precioVenta": 87,
-  //     "subtotal": 174
-  // }
-
+const TablaPRoductosVentas = ({ listaProd }) => {
   return (
     <div className="card">
       <div className="card-body">

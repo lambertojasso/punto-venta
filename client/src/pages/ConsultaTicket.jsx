@@ -26,7 +26,7 @@ const ConsultaTicket = () => {
       </div>
       <div className="row">
         <div className="col-4">{ticketVenta && <TablaTicketVenta />}</div>
-        <div className="col-8 mb-3">{ticketVenta && <TablaPRoductosVentas />}</div>
+        <div className="col-8 mb-3">{ticketVenta && <TablaPRoductosVentas listaProd={ticketVenta.listaProd} />}</div>
       </div>
     </div>
   );

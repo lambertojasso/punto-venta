@@ -208,22 +208,44 @@ update inventario i set i.cantidad = i.cantidad + (-1) where i.idProducto = 1;
 
 ;
 
-select * from inventario limit 1;
+select * from inventario limit 5;
 
 desc inventario;
-
+desc ventas;
 
 UPDATE inventario SET cantidad = CASE idProducto 
-                          WHEN 1 THEN 1 
-                          WHEN 2 THEN 2 
-                          WHEN 4 THEN 10 
-                          ELSE Col1 
+                          WHEN 1 THEN cantidad + -1 
+                          WHEN 2 THEN cantidad + 2 
+                          WHEN 3 THEN cantidad + 10                            
                         END
-             WHERE id IN (1, 2, 3, 4);
+             WHERE idProducto IN (1, 2, 3);
              
              
 
 
 
+select v.idProducto, v.cantidad from ventas v where v.idTicket = 65235 order by v.idProducto asc;
 
+delete from ventas v where v.idTicket = 90003;
+
+ delete from ticketVenta t where t.idticketVenta = 90003;
+ 
+ 
+ select * from usuarios;
+ 
+ -- Ventas del dia
+ select date(now());
+ 
+ 
+ select t.idticketVenta from ticketVenta t 
+ 
+ where date(t.fecha) = date(now());
+ 
+ 
+ select p.idproductos, p.descripcion, sum(v.cantidad) from ventas v 
+ inner join productos p on v.idProducto = p.idproductos 
+ where v.idTicket in ( select t.idticketVenta from ticketVenta t where date(t.fecha) = date(now()));
+ 
+ 
+ 
  

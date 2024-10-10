@@ -4,7 +4,7 @@ import { useTienda } from "../context/TiendaContext";
 import TablaVentas from "../components/TablaVentas";
 
 const ConsultarVenta = () => {
-  const { fechas, ventaPerido, listaVentaPeriodo } = useTienda();
+  const { fechas, ventaPerido, listaVentaPeriodo, setFechas } = useTienda();
 
   useEffect(() => {
     ventaPerido();
@@ -19,7 +19,7 @@ const ConsultarVenta = () => {
       </div>
       <div className="row">
         <div className="col-12">
-          <FormFechas />
+          <FormFechas fechas={fechas} setFechas={setFechas} />
         </div>
       </div>
       <div className="row">

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
 import { useTienda } from "../context/TiendaContext";
 import { FormId } from "../components/FormId";
 import ListaVenta from "../components/ListaVenta";
 import { useNavigate } from "react-router-dom";
 
 const CajaRegistradora = () => {
-
-
   const navigate = useNavigate();
   // consumo del contexto
   const {
@@ -15,6 +15,7 @@ const CajaRegistradora = () => {
     agregarProducto,
     total,
     registrarVenta,
+    cancelarVenta,
   } = useTienda();
   // Variable para almacenar el numero de cuenta
   const [id_Producto, setId_Producto] = useState(null);
@@ -29,9 +30,24 @@ const CajaRegistradora = () => {
         if (total <= id_Producto * -1) {
           console.log("Se realiza el cobro cambio: ", id_Producto * -1 - total);
 
-          registrarVenta(id_Producto * -1);
+          Swal.fire({
+            title: "Registrar la venta ?",
+            showCancelButton: true,
+            cancelButtonText: "Cancelar",
+            confirmButtonText: "Registrar",
+          }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+              registrarVenta(id_Producto * -1);
+              Swal.fire("Venta Registrada !", "", "success");
+            } else {
+              Swal.fire("Venta Cancelada", "", "info");
+              cancelarVenta();
+            }
+          });
         } else {
-          console.log("Pago insuficiente");
+          Swal.fire("Pago Insuficiente", "", "info");
+
         }
 
         setId_Producto(null);
@@ -60,7 +76,12 @@ const CajaRegistradora = () => {
       <div className="row">
         <div className="col-3">
           <FormId setCantidad={!!!producto ? setId_Producto : setCantidad} />
-          <button className="btn btn-primary mt-2" onClick={() => navigate("/caja/buscar-producto")}>Buscar</button>
+          <button
+            className="btn btn-primary mt-2"
+            onClick={() => navigate("/caja/buscar-producto")}
+          >
+            Buscar
+          </button>
           {producto && (
             <div>
               <h5 className="mt-3">{producto.data.descripcion}</h5>
