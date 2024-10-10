@@ -1,15 +1,21 @@
 import { Router } from "express";
 import {
+  consultarCorteDia,
   consultarTicket,
   consultarVentasPerido,
+  consultarVentasProducto,
   eliminarVenta,
-} from "../controllers/ventas.controller";
+  registrarVenta,
+} from "../controllers/ventas.controller.js";
 
 const router = Router();
 
-router.get("/ventas/:fecha_inicio/:fecha_final", consultarVentasPerido);
-router.get("/ventas/:id_ticket", consultarTicket);
+router.get("/:id_ticket", consultarTicket);
+router.get("/corte/:fecha_inicio/:fecha_final", consultarCorteDia);
+router.get("/:fecha_inicio/:fecha_final", consultarVentasPerido);
+router.get("/:fecha_inicio/:fecha_final/:idProducto", consultarVentasProducto);
 
-router.delete('/ventas/:id_venta', eliminarVenta);
+router.delete("/:id_venta", eliminarVenta);
+router.post("/", registrarVenta);
 
 export default router;
