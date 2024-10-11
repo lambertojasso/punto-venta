@@ -1,0 +1,7 @@
+solo se tiene que ejecutar
+
+
+git pull 
+
+
+dentro de la carpeta punto de venta
